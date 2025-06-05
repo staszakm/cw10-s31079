@@ -21,11 +21,23 @@ public partial class MasterContext : DbContext
     public virtual DbSet<ClientTrip> ClientTrips { get; set; }
 
     public virtual DbSet<Country> Countries { get; set; }
+    public virtual DbSet<CountryTrip> CountryTrips { get; set; }
 
     public virtual DbSet<Trip> Trips { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        
+        modelBuilder.Entity<CountryTrip>().ToTable("Country_Trip");
+        modelBuilder.Entity<ClientTrip>().ToTable("Client_Trip");
+        
+        modelBuilder.Entity<CountryTrip>()
+            .HasKey(ct => new { ct.IdCountry, ct.IdTrip });
+        
+        modelBuilder.Entity<ClientTrip>()
+            .HasKey(ct => new { ct.IdClient, ct.IdTrip });
+        
+        
         modelBuilder.Entity<Client>(entity =>
         {
             entity.HasKey(e => e.IdClient).HasName("Client_pk");
@@ -66,8 +78,14 @@ public partial class MasterContext : DbContext
             entity.ToTable("Country");
 
             entity.Property(e => e.Name).HasMaxLength(120);
-
-            entity.HasMany(d => d.IdTrips).WithMany(p => p.IdCountries)
+            
+            modelBuilder.Entity<Country>(entity =>
+            {
+                entity.HasKey(e => e.IdCountry).HasName("Country_pk");
+                entity.ToTable("Country");
+                entity.Property(e => e.Name).HasMaxLength(120);
+            });
+            /*entity.HasMany(d => d.IdTrips).WithMany(p => p.IdCountries)
                 .UsingEntity<Dictionary<string, object>>(
                     "CountryTrip",
                     r => r.HasOne<Trip>().WithMany()
@@ -82,7 +100,7 @@ public partial class MasterContext : DbContext
                     {
                         j.HasKey("IdCountry", "IdTrip").HasName("Country_Trip_pk");
                         j.ToTable("Country_Trip");
-                    });
+                    });*/
         });
 
         modelBuilder.Entity<Trip>(entity =>

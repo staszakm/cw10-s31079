@@ -1,4 +1,5 @@
 using cw10.Data;
+using cw10.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace cw10;
@@ -20,6 +21,8 @@ public class Program
         {
             opt.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
         });
+
+        builder.Services.AddScoped<IDbService, Service>();
         
         var app = builder.Build();
 
