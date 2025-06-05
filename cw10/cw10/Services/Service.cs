@@ -75,7 +75,6 @@ public class Service(MasterContext context) : IDbService
     {
         var client = await context.Clients.FirstOrDefaultAsync(p=>p.Pesel == clientTrip.Pesel);
         var trips = await context.Trips.FindAsync(tripId);
-        if (client != null)
             
         if (trips == null)
         {
