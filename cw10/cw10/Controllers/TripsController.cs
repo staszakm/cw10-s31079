@@ -25,11 +25,11 @@ public class TripsController(IDbService service) : ControllerBase
     }
 
     [HttpPost("{idTrip}/clients")]
-    public async Task<IActionResult> AddClientTrip([FromRoute] int idt, [FromBody] ClientTripPostDto ct)
+    public async Task<IActionResult> AddClientTrip([FromRoute] int idTrip, [FromBody] ClientTripPostDto ct)
     {
         try
         {
-            await service.JoinClientTripAsync(idt, ct);
+            await service.JoinClientTripAsync(idTrip, ct);
             return Ok("Client added to a trip");
         }
         catch (InvalidOperationException e)
